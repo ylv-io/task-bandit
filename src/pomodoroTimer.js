@@ -68,7 +68,7 @@ class PomodoroTimer {
       active: this.active,
       mode: this.mode,
       timeLeft: this.timeLeft,
-      isComplete: this.timeLeft === 0
+      isComplete: this.timeLeft === 0,
     };
   }
 

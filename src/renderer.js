@@ -51,7 +51,7 @@ class Renderer {
 
   needsUpdate(state) {
     if (!this.lastRenderedState) return true;
-    
+
     // Check if any meaningful state has changed
     const current = JSON.stringify({
       tasks: state.tasks,
@@ -60,16 +60,16 @@ class Renderer {
       pomodoro: {
         active: state.pomodoro.active,
         mode: state.pomodoro.mode,
-        timeLeft: Math.floor(state.pomodoro.timeLeft / 1000) // Round to seconds to avoid constant updates
-      }
+        timeLeft: Math.floor(state.pomodoro.timeLeft / 1000), // Round to seconds to avoid constant updates
+      },
     });
-    
+
     return current !== this.lastRenderedState;
   }
 
   render(state) {
     if (!this.needsUpdate(state)) return;
-    
+
     this.clear();
     this.hideCursor();
 
@@ -80,7 +80,7 @@ class Renderer {
     this.write(chalk.gray(currentTime), this.width - 10, 1);
 
     this.drawBox(2, 3, this.width - 3, 8, 'Tasks');
-    
+
     if (state.tasks.length === 0) {
       this.write(chalk.gray('No tasks yet. Press "a" to add one!'), 4, 6);
     } else {
@@ -88,11 +88,11 @@ class Renderer {
         const isSelected = index === state.selectedTask;
         const timeLeft = this.getTimeLeft(task.createdAt);
         const taskLine = `${isSelected ? '>' : ' '} ${task.text} ${chalk.gray(`(${timeLeft})`)}`;
-        
+
         let color = chalk.white;
         if (timeLeft.includes('expired')) color = chalk.red;
         else if (timeLeft.includes('hour')) color = chalk.yellow;
-        
+
         this.write(color(taskLine), 4, 5 + index);
       });
     }
@@ -108,16 +108,9 @@ class Renderer {
       this.centerText(timerText, 19);
     }
 
-    const controls = [
-      'a: Add task',
-      'd: Delete task',
-      'r: Random pick',
-      'space: Timer',
-      'j/k: Navigate',
-      'q: Quit'
-    ];
+    const controls = ['a: Add task', 'd: Delete task', 'r: Random pick', 'space: Timer', 'j/k: Navigate', 'q: Quit'];
     this.write(chalk.gray(controls.join(' | ')), 2, this.height - 1);
-    
+
     // Store current state
     this.lastRenderedState = JSON.stringify({
       tasks: state.tasks,
@@ -126,8 +119,8 @@ class Renderer {
       pomodoro: {
         active: state.pomodoro.active,
         mode: state.pomodoro.mode,
-        timeLeft: Math.floor(state.pomodoro.timeLeft / 1000)
-      }
+        timeLeft: Math.floor(state.pomodoro.timeLeft / 1000),
+      },
     });
   }
 
@@ -135,12 +128,12 @@ class Renderer {
     const now = Date.now();
     const elapsed = now - createdAt;
     const remaining = 24 * 60 * 60 * 1000 - elapsed;
-    
+
     if (remaining <= 0) return 'expired';
-    
+
     const hours = Math.floor(remaining / (60 * 60 * 1000));
     const minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
-    
+
     if (hours > 0) return `${hours}h ${minutes}m`;
     return `${minutes}m`;
   }

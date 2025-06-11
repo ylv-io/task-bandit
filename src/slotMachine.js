@@ -10,12 +10,12 @@ class SlotMachine {
 
   start(tasks) {
     if (tasks.length === 0) return null;
-    
+
     this.spinning = true;
     this.spinDuration = 2000 + Math.random() * 1000; // 2-3 seconds
     this.spinStartTime = Date.now();
     this.selectedTask = null;
-    
+
     return this.spinDuration;
   }
 
@@ -34,12 +34,15 @@ class SlotMachine {
     // Create spinning effect with decreasing speed
     const speed = Math.max(50, 200 * (1 - progress));
     const currentSymbol = this.symbols[Math.floor(Date.now() / speed) % this.symbols.length];
-    
+
     // Build spinning display
-    const spinLine = Array(15).fill().map((_, i) => {
-      const offset = (Date.now() / (speed + i * 10)) % this.symbols.length;
-      return this.symbols[Math.floor(offset)];
-    }).join(' ');
+    const spinLine = Array(15)
+      .fill()
+      .map((_, i) => {
+        const offset = (Date.now() / (speed + i * 10)) % this.symbols.length;
+        return this.symbols[Math.floor(offset)];
+      })
+      .join(' ');
 
     this.display = `${spinLine}\n    ${currentSymbol}    \n${spinLine}`;
   }
@@ -54,13 +57,13 @@ class SlotMachine {
 
   selectTask(tasks) {
     if (tasks.length === 0) return null;
-    
+
     const randomIndex = Math.floor(Math.random() * tasks.length);
     this.selectedTask = {
       task: tasks[randomIndex],
-      index: randomIndex
+      index: randomIndex,
     };
-    
+
     return this.selectedTask;
   }
 

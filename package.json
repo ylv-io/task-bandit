@@ -5,13 +5,23 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "node --watch src/index.js"
+    "dev": "node --watch src/index.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
-  "keywords": ["cli", "task-manager", "pomodoro", "productivity"],
+  "keywords": [
+    "cli",
+    "task-manager",
+    "pomodoro",
+    "productivity"
+  ],
   "author": "Igor Yalovoy",
   "license": "MIT",
   "dependencies": {
     "chalk": "^5.3.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
   },
   "type": "module"
 }

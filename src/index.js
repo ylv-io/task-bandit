@@ -12,19 +12,19 @@ class TaskBandit {
     this.taskManager = new TaskManager();
     this.slotMachine = new SlotMachine();
     this.pomodoro = new PomodoroTimer();
-    
+
     this.state = {
       tasks: [],
       selectedTask: 0,
       slotMachine: {
         spinning: false,
-        display: ''
+        display: '',
       },
       pomodoro: {
         active: false,
         mode: 'work',
-        timeLeft: 25 * 60 * 1000
-      }
+        timeLeft: 25 * 60 * 1000,
+      },
     };
 
     this.running = false;
@@ -36,7 +36,7 @@ class TaskBandit {
     process.stdin.setRawMode(true);
     process.stdin.resume();
     process.stdin.setEncoding('utf8');
-    
+
     process.stdin.on('data', (key) => {
       this.handleInput(key);
     });
@@ -49,7 +49,7 @@ class TaskBandit {
 
   handleInput(key) {
     const keyCode = key.charCodeAt(0);
-    
+
     // Handle Ctrl+C
     if (keyCode === 3) {
       this.quit();
@@ -84,17 +84,17 @@ class TaskBandit {
   async addTask() {
     this.renderer.showCursor();
     this.renderer.write('Enter task: ', 2, this.renderer.height - 2);
-    
+
     const rl = createInterface({
       input: process.stdin,
-      output: process.stdout
+      output: process.stdout,
     });
 
     try {
       const answer = await new Promise((resolve) => {
         rl.question('', resolve);
       });
-      
+
       if (answer.trim()) {
         this.taskManager.addTask(answer.trim());
         this.updateState();
@@ -118,10 +118,10 @@ class TaskBandit {
 
   randomPick() {
     if (this.state.tasks.length === 0) return;
-    
+
     this.slotMachine.start(this.state.tasks);
     this.state.slotMachine.spinning = true;
-    
+
     setTimeout(() => {
       const selected = this.slotMachine.selectTask(this.state.tasks);
       if (selected) {
@@ -156,9 +156,9 @@ class TaskBandit {
     this.state.tasks = this.taskManager.getTasks();
     this.state.slotMachine = {
       spinning: this.slotMachine.isSpinning(),
-      display: this.slotMachine.getDisplay()
+      display: this.slotMachine.getDisplay(),
     };
-    
+
     const pomodoroStatus = this.pomodoro.getStatus();
     this.state.pomodoro = pomodoroStatus;
   }
@@ -167,12 +167,12 @@ class TaskBandit {
     if (this.slotMachine.isSpinning()) {
       this.slotMachine.update();
     }
-    
+
     const pomodoroCompleted = this.pomodoro.update();
     if (pomodoroCompleted) {
       // Could add notification here
     }
-    
+
     this.updateState();
     this.renderer.render(this.state);
   }
@@ -180,10 +180,10 @@ class TaskBandit {
   start() {
     this.running = true;
     this.updateState();
-    
+
     // Initial render
     this.renderer.render(this.state);
-    
+
     // Start update loop
     this.updateInterval = setInterval(() => {
       this.update();
@@ -195,7 +195,7 @@ class TaskBandit {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
     }
-    
+
     this.renderer.clear();
     this.renderer.showCursor();
     process.stdin.setRawMode(false);

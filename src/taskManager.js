@@ -12,9 +12,9 @@ class TaskManager {
       id: Date.now().toString(),
       text: text.trim(),
       createdAt: Date.now(),
-      completed: false
+      completed: false,
     };
-    
+
     this.data.tasks.push(newTask);
     this.save();
     return newTask;
@@ -44,12 +44,12 @@ class TaskManager {
   cleanExpiredTasks() {
     const now = Date.now();
     const dayInMs = 24 * 60 * 60 * 1000;
-    
+
     const initialCount = this.data.tasks.length;
-    this.data.tasks = this.data.tasks.filter(task => {
-      return (now - task.createdAt) < dayInMs;
+    this.data.tasks = this.data.tasks.filter((task) => {
+      return now - task.createdAt < dayInMs;
     });
-    
+
     if (this.data.tasks.length !== initialCount) {
       this.save();
     }
@@ -58,11 +58,11 @@ class TaskManager {
   getRandomTask() {
     const activeTasks = this.getTasks();
     if (activeTasks.length === 0) return null;
-    
+
     const randomIndex = Math.floor(Math.random() * activeTasks.length);
     return {
       task: activeTasks[randomIndex],
-      index: randomIndex
+      index: randomIndex,
     };
   }
 
